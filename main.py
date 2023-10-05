@@ -2,8 +2,8 @@ import pygame
 from sys import exit
 
 def display_score():
-    time = pygame.time.get_ticks()
-    score_surface = test_font.render(f"{time}", False, (64, 64, 64))
+    time = int(pygame.time.get_ticks()/1000) - start_time
+    score_surface = test_font.render(f"Score: {time}", False, (64, 64, 64))
     score_rect = score_surface.get_rect(center=(400, 50))
     screen.blit(score_surface, score_rect)
 
@@ -20,7 +20,8 @@ clock = pygame.time.Clock()
 # the font
 test_font = pygame.font.Font('Assets/Pixeltype.ttf', 50)
 
-game_active = True
+game_active = False
+start_time = 0
 
 # Surfaces
 # Note: Use .convert() for better optimization. .convert_alpha() for pngs with transparent parts
@@ -40,6 +41,10 @@ player_surface = pygame.image.load('Assets/Sprites/player_walk_1.png').convert_a
 player_rect = player_surface.get_rect(bottomleft=(80, 300))
 player_gravity = 0
 
+#Intro
+player_stand = pygame.image.load('Assets/Sprites/player_stand.png').convert_alpha()
+player_stand_rect = player_stand.get_rect(center = (400,200))
+
 while True:
     # Checks for if the user closes the window, if so quit the game
     for event in pygame.event.get():
@@ -58,6 +63,7 @@ while True:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     game_active = True
                     snail_rect.left = 800
+                    start_time = int(pygame.time.get_ticks()/1000)
 
     if game_active:
         # the background images and their positions
@@ -89,7 +95,8 @@ while True:
         if snail_rect.colliderect(player_rect):
             game_active = False
     else:
-        screen.fill("Black")
+        screen.fill((94, 129, 162))
+        screen.blit(player_stand, player_stand_rect)
 
 
     # Updates the display surface at screen
